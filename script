@@ -29,6 +29,6 @@ if( oTmpArray ) {
 		}        
 	}
 	var value = "'{ \"value1\" : \"" # slist # "\" }'";
-	var cmd = "LD_LIBRARY_PATH=/usr/local/addons/cuxd /usr/local/addons/cuxd/curl -k -H 'Content-Type: application/json' -X POST -d " # value # " https://maker.ifttt.com/trigger/Servicemeldung/with/key/cG35KTGBuRwK064ar5A04W";
+	var cmd = "LD_LIBRARY_PATH=/usr/local/addons/cuxd /usr/local/addons/cuxd/curl -k -H 'Content-Type: application/json' -X POST -d " # value # " https://maker.ifttt.com/trigger/Servicemeldung/with/key/YOURKEY";
 	dom.GetObject("CUxD.CUX2801001:1.CMD_EXEC").State(cmd);
 }

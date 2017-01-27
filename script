@@ -1,0 +1,34 @@
+object oTmpArray = dom.GetObject(ID_SERVICES);
+if( oTmpArray ) {
+	string sTmp;
+	string sdev;
+	string sdesc;
+	string slist;
+	foreach(sTmp, oTmpArray.EnumIDs()) {
+		object oTmp = dom.GetObject( sTmp );
+		if(oTmp) {
+			if(oTmp.IsTypeOf(OT_ALARMDP) && (oTmp.AlState() == asOncoming) ) {
+				var trigDP = dom.GetObject(oTmp.AlTriggerDP());
+				var ch = dom.GetObject(trigDP.Channel());
+				var sdev = dom.GetObject(ch.Device());
+				var sdesc = trigDP.AlDestMapDP().Name().StrValueByIndex(".", 2 );
+				if (sdesc == "CONFIG_PENDING") {
+					sdesc = " Konfigurationsdaten stehen zur Uebertragung an";
+				}
+				if (sdesc == "LOWBAT") {
+					sdesc = " Batteriestand niedrig";
+				}
+				if (sdesc == "STICKY_UNREACH") {
+					sdesc = " Kommunikation war gestoert ";
+				}
+				if (sdesc == "UNREACH") {
+					sdesc = " Kommunikation zur Zeit gestoert ";
+				}
+				slist = slist # "Geraetename: " #sdev.Name() #" - " #"Fehler: "# sdesc;
+			}
+		}        
+	}
+	var value = "'{ \"value1\" : \"" # slist # "\" }'";
+	var cmd = "LD_LIBRARY_PATH=/usr/local/addons/cuxd /usr/local/addons/cuxd/curl -k -H 'Content-Type: application/json' -X POST -d " # value # " https://maker.ifttt.com/trigger/Servicemeldung/with/key/cG35KTGBuRwK064ar5A04W";
+	dom.GetObject("CUxD.CUX2801001:1.CMD_EXEC").State(cmd);
+}
